@@ -1,0 +1,19 @@
+wallet:
+  address: '<YOUR WALLET HERE>'
+  private_key: '<YOUR PRIVATE KEY HERE>'
+
+pancakeswap:
+  router_address: '0x10ED43C718714eb63d5aA57B78B54704E256024E'
+  wbnb_address: '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c'
+  busd_address: '0xe9e7cea3dedca5984780bafc599bd69add087d56'
+
+stoploss:
+  tokens:
+    bcmc:
+      address: '0xc10358f062663448a3489fc258139944534592ac'
+      value: 0.55
+      slippage: 0.5
+    lus:
+      address: '0xde301d6a2569aefcfe271b9d98f318baee1d30a4'
+      value: 3.15
+      slippage: 0.5
