@@ -8,31 +8,7 @@ import pandas as pd
 from web3 import Web3
 from datetime import datetime
 
-
-class TokenERC20:
-    def __init__(self, token_address):
-        token_abi_file = open('erc20_abi.json','r')
-        token_abi = json.load(token_abi_file)
-        self.address = token_address
-        self.contract = web3.eth.contract(address=token_address, abi=token_abi)
-        self.symbol = self.contract.functions.symbol().call()
-        self.decimals = self.contract.functions.decimals().call()
-
-    def balanceOf(self, owner):
-        balance = self.contract.functions.balanceOf(owner).call()
-        return balance
-
-    def approve(self, owner, spender, amount):
-        allowance = self.contract.functions.allowance(owner, spender).call()
-        if allowance == 0:
-            approve = self.contract.functions.approve(spender, amount).buildTransaction({
-                        'from': owner,
-                        'gasPrice': web3.toWei('5','gwei'),
-                        'nonce': web3.eth.get_transaction_count(owner),
-                        })
-            signed_txn = web3.eth.account.sign_transaction(approve, private_key=PRIVATE_KEY)
-            tx_token = web3.eth.send_raw_transaction(signed_txn.rawTransaction)
-            print("Approved: " + web3.toHex(tx_token))
+from utils.token_erc20 import TokenERC20
 
 
 class PancakeSwapAPI:
@@ -64,7 +40,7 @@ class PancakeSwapAPI:
         amountsOut = self.pancake_contract.functions.getAmountsOut(amount, router_path).call()
         amountsOutMin = int(amountsOut[2] - amountsOut[2] * (slippage / 100))
 
-        input_token.approve(wallet_address, self.router_address, amount)
+        input_token.approve(wallet_address, self.router_address, amount, PRIVATE_KEY)
 
         nonce = web3.eth.get_transaction_count(wallet_address)
         txn = self.pancake_contract.functions.swapExactTokensForTokens(
@@ -83,14 +59,16 @@ class PancakeSwapAPI:
         tx_token = web3.eth.send_raw_transaction(signed_txn.rawTransaction)
         return web3.toHex(tx_token)
 
-    def swap_with_bnb(self, wallet_address, input_token, output_token, value_in_wei, slippage=0.5):
+    def swap_with_bnb(self, wallet_address, input_token, output_token, amount, slippage=0.5):
         router_path = [input_token.address, output_token.address]
-        amountsOut = self.pancake_contract.functions.getAmountsOut(value_in_wei, router_path).call()
+        amountsOut = self.pancake_contract.functions.getAmountsOut(amount, router_path).call()
         amountsOutMin = amountsOut[1] - amountsOut[1] * (slippage / 100)
+
+        input_token.approve(wallet_address, self.router_address, amount, PRIVATE_KEY)
 
         nonce = web3.eth.get_transaction_count(wallet_address)
         txn = self.pancake_contract.functions.swapExactTokensForETHSupportingFeeOnTransferTokens(
-              value_in_wei,        
+              amount,        
               amountsOutMin, # here setup the minimum destination token you want to have, you can do some math, or you can put a 0 if you don't want to care
               router_path,
               wallet_address,

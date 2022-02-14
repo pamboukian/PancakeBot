@@ -1,0 +1,13 @@
+wallets:
+  lus_marketing:
+    token: 'lus'
+    token_address: '0xde301d6a2569aefcfe271b9d98f318baee1d30a4'
+    wallet_address: '0x6ce570f5fe2f2e93e98a4eb2b78341330e6e1d2c'w
+  lus_team_and_advisor:
+    token: 'lus'
+    token_address: '0xde301d6a2569aefcfe271b9d98f318baee1d30a4'
+    wallet_address: '0x8cb50bda55b59b58a4831fbc3778c11e63064a2b'
+
+telegram:
+  token: 'YOUR TOKEN HERE'
+  client_id: 'YOUR CLIENT ID'
