@@ -193,7 +193,7 @@ while (1):
             if balance == 0 or balance < stoploss_value:
                 continue
 
-            slippage = stoploss_tokens[token]['slippage']
+            slippage = stoploss_tokens[token]['slippage'] / 100
             if price <= stoploss_value:
                 tx = pancake.swap_with_tokens(WALLET_ADDRESS, token_contract, bnb_token, busd_token, balance)
                 current_timestamp = datetime.now().strftime("%d/%b/%Y %H:%M:%S.%f")
